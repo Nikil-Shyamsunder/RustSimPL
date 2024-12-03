@@ -52,6 +52,9 @@ pub fn parse_expr(pairs: Pairs<Rule>) -> Expr {
     PRATT_PARSER
         .map_primary(|primary| match primary.as_rule() {
             Rule::integer => Expr::Integer(primary.as_str().parse::<i32>().unwrap()),
+            
+            // if primary is an expression (due to parens), recursively parse its inner constituents
+            Rule::expr => parse_expr(primary.into_inner()),
             rule => unreachable!("Expr::parse expected atom, found {:?}", rule)
         })
         .map_infix(|lhs, op, rhs| {
