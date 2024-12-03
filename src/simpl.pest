@@ -1,5 +1,9 @@
 integer = @{ (ASCII_DIGIT)+ }
-atom =_{ integer }
+primary = _{ integer | "(" ~ expr ~ ")"}
+atom = _{primary | unary_op? ~ primary}
+
+unary_op = _ { negate }
+    negate = { "-" }
 
 bin_op = _{ add | subtract | multiply | divide }
     add = { "+" }

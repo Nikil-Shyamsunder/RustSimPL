@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub enum Op {
+pub enum BinOperator {
     Add,
     Subtract,
     Multiply,
@@ -7,7 +7,13 @@ pub enum Op {
 }
 
 #[derive(Debug)]
+pub enum UnaryOperator {
+    Negate
+}
+
+#[derive(Debug)]
 pub enum Expr {
-    BinOp {lhs: Box<Expr>, op: Op, rhs: Box<Expr>},
+    BinOp {lhs: Box<Expr>, op: BinOperator, rhs: Box<Expr>},
+    UnaryOp {arg: Box<Expr>, op: UnaryOperator},
     Integer(i32)
 }

@@ -34,8 +34,6 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-
-
 lazy_static::lazy_static! {
     static ref PRATT_PARSER: PrattParser<Rule> = {
         use pest::pratt_parser::{Assoc::*, Op};
@@ -46,6 +44,7 @@ lazy_static::lazy_static! {
             // Addition and subtract have equal precedence
             .op(Op::infix(add, Left) | Op::infix(subtract, Left))
             .op(Op::infix(multiply, Left) | Op::infix(divide, Left))
+            .op(Op::prefix(negate))
     };
 }
 
@@ -57,10 +56,10 @@ pub fn parse_expr(pairs: Pairs<Rule>) -> Expr {
         })
         .map_infix(|lhs, op, rhs| {
             let op = match op.as_rule() {
-                Rule::add => Op::Add,
-                Rule::subtract => Op::Subtract,
-                Rule::multiply => Op::Multiply,
-                Rule::divide => Op::Divide,
+                Rule::add => BinOperator::Add,
+                Rule::subtract => BinOperator::Subtract,
+                Rule::multiply => BinOperator::Multiply,
+                Rule::divide => BinOperator::Divide,
                 rule => unreachable!("Expr::parse expected infix operation, found {:?}", rule),
             };
             Expr::BinOp {
@@ -69,6 +68,12 @@ pub fn parse_expr(pairs: Pairs<Rule>) -> Expr {
                 rhs: Box::new(rhs),
             }
         })
+        .map_prefix(|op, arg| {
+            let op = match op.as_rule() {
+                Rule::negate => UnaryOperator::Negate,
+                rule => unreachable!("Expr::parse expected prefix operation, found {:?}", rule),
+            };
+            Expr::UnaryOp {arg: Box::new(arg) , op: op }
+        })
         .parse(pairs)
-
 }
