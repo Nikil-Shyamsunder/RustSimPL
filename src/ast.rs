@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub enum Op {
     Add,
     Subtract,
@@ -5,7 +6,8 @@ pub enum Op {
     Divide,
 }
 
+#[derive(Debug)]
 pub enum Expr {
-    BinOp {op: Op, lhs: Box<Expr>, rhs: Box<Expr>},
+    BinOp {lhs: Box<Expr>, op: Op, rhs: Box<Expr>},
     Integer(i32)
 }
