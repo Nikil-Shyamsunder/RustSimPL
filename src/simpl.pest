@@ -1,0 +1,14 @@
+integers = _{ (ASCII_DIGIT)+ }
+atom = @{ integers }
+
+add = { "+" }
+subtract = { "-" }
+multiply = { "*" }
+divide = { "/" }
+
+bin_op = { add | subtract | multiply | divide }
+
+expr = { atom ~ (bin_op ~ atom)* }
+
+WHITESPACE = _{ " " }
+main = { SOI ~ expr ~ EOI }
