@@ -1,14 +1,13 @@
-integers = _{ (ASCII_DIGIT)+ }
-atom = @{ integers }
+integer = @{ (ASCII_DIGIT)+ }
+atom =_{ integer }
 
-add = { "+" }
-subtract = { "-" }
-multiply = { "*" }
-divide = { "/" }
-
-bin_op = { add | subtract | multiply | divide }
+bin_op = _{ add | subtract | multiply | divide }
+    add = { "+" }
+    subtract = { "-" }
+    multiply = { "*" }
+    divide = { "/" }
 
 expr = { atom ~ (bin_op ~ atom)* }
 
 WHITESPACE = _{ " " }
-main = { SOI ~ expr ~ EOI }
+main = _{ SOI ~ expr ~ EOI }
